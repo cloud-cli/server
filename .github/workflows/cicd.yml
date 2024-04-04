@@ -1,8 +1,6 @@
 name: CICD
 on:
-  push:
-    branches:
-      - main
+  - push
 
 concurrency:
   group: ${{ github.ref }}
