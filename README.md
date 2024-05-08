@@ -72,12 +72,14 @@ theme:
 
 # Components
 # Create components to reuse common definitions of styles
-# This examples generates `btn`, `btn__icon`
+# This examples generates `btn`, `btn__icon` and btn:hover
 components:
   btn:
-    apply: px-4 py-2 bg-primary-dark hover:bg-gray
+    apply: px-4 py-2 bg-primary-dark
     parts:
       icon: mr-4
+    states:
+      hover: bg-gray border-white
 
 # Core Plugins
 # Explicitly enable Tailwind features using plugins

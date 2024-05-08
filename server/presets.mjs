@@ -22,6 +22,7 @@ function defineComponent(name, def) {
     generateComponentParts(name, def.parts, '__'),
     generateComponentParts(name, def.modifiers, '--'),
     generateComponentParts(name, def.variants, '-'),
+    generateComponentParts(name, def.states, ':'),
   ]
     .flat()
     .join('');
