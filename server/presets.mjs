@@ -62,6 +62,10 @@ function generateCssTemplate(presets) {
       chain.theme = Object.assign({}, chain.theme, next.theme);
     }
 
+    if (next.variables) {
+      chain.variables = Object.assign({}, chain.variables, next.variables);
+    }
+
     if (next.components && typeof next.components === 'object') {
       Object.assign(chain, next.components);
     }
