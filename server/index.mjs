@@ -111,7 +111,7 @@ async function onCompile(path, response) {
       toJSON({
         error: String(error),
         source: error.source,
-        json: output.json,
+        json: JSON.parse(output.json),
       }),
     );
     return;
@@ -119,7 +119,7 @@ async function onCompile(path, response) {
 
   await savePresetAssets(path, output);
   log('Finished in ' + (Date.now() - start) + 'ms');
-  response.end(toJSON({ json: output.json }));
+  response.end(toJSON({ json: JSON.parse(output.json) }));
 }
 
 async function onGenerate(input, response) {
