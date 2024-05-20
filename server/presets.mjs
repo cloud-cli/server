@@ -58,6 +58,10 @@ function generateCssTemplate(presets) {
   const styles = [];
   const variables = {};
   const chain = presets.reduce((chain, next) => {
+    if (next.theme) {
+      chain.theme = Object.assign({}, chain.theme, next.theme);
+    }
+
     if (next.components && typeof next.components === 'object') {
       Object.assign(chain, next.components);
     }
