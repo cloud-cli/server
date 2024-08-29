@@ -26,10 +26,10 @@ function generateShadowComponentStates(name, def) {
 }
 
 function generateShadowComponentVariants(name, variants) {
-  return each(variants).map(
-    ([variant, classes]) =>
-      `.${name}.${name}-${variant}::part(component) {\n  @apply ${classes} ;\n}\n`
-  );
+  return each(variants).map(([variant, c]) => [
+    `.${name}.${name}-${variant}::part(component)`,
+    c,
+  ]);
 }
 
 function generateComponent(name, def, prefix = "") {
