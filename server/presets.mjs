@@ -38,20 +38,20 @@ function generateShadowComponentVariants(name, variants) {
   ]);
 }
 
-function generateComponent(name, def, prefix = "") {
-  return !def ? [] : [`${prefix}${name}::part(component)`, def.apply];
+function generateComponentRoot(name, def, prefix = "") {
+  return !def ? [] : [[`${prefix}${name}::part(component)`, def.apply]];
 }
 
 function defineComponent(name, def, useShadowDom) {
   const all = useShadowDom
     ? [
-        generateComponent(name, def.apply),
+        generateComponentRoot(name, def.apply),
         generateShadowComponentParts(name, def.parts),
         generateShadowComponentStates(name, def.states),
         generateShadowComponentVariants(name, def.variants, "-"),
       ]
     : [
-        generateComponent(name, def.apply, "."),
+        generateComponentRoot(name, def.apply, "."),
         generateComponentParts(name, def.parts, "__"),
         generateComponentParts(name, def.modifiers, "--"),
         generateComponentParts(name, def.variants, "-"),
