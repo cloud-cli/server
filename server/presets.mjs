@@ -15,7 +15,7 @@ const each = (v) => (!v ? [] : Object.entries(v));
 
 function expandRules(items) {
   return items
-    .map((item) => (item ? item[0] + `{\n  @apply ${item[1]} ;\n}\n` : ""))
+    .map((item) => (item ? item[0] + `{ @apply ${item[1]}; }\n` : ""))
     .filter(Boolean);
 }
 
@@ -39,7 +39,7 @@ function generateShadowComponentVariants(name, variants) {
 }
 
 function generateComponentRoot(name, def, prefix = "") {
-  return !def ? [] : [[`${prefix}${name}::part(component)`, def.apply]];
+  return !def ? [] : [[`${prefix}${name}::part(component)`, def]];
 }
 
 function defineComponent(name, def, useShadowDom) {
