@@ -19,6 +19,10 @@ function expandRules(items) {
     .filter(Boolean);
 }
 
+function generateComponentRoot(name, classes) {
+  return !classes ? [] : [[`.${name}`, classes]];
+}
+
 function generateComponentParts(name, def, separator) {
   return each(def).map(([part, c]) => [`.${name}${separator}${part}`, c]);
 }
@@ -38,20 +42,20 @@ function generateShadowComponentVariants(name, variants) {
   ]);
 }
 
-function generateComponentRoot(name, def, prefix = "") {
-  return !def ? [] : [[`${prefix}${name}::part(component)`, def]];
+function generateShadowComponentRoot(name, classes) {
+  return !classes ? [] : [[`${name}::part(component)`, classes]];
 }
 
 function defineComponent(name, def, useShadowDom) {
   const all = useShadowDom
     ? [
-        generateComponentRoot(name, def.apply),
+        generateShadowComponentRoot(name, def.apply),
         generateShadowComponentParts(name, def.parts),
         generateShadowComponentStates(name, def.states),
         generateShadowComponentVariants(name, def.variants, "-"),
       ]
     : [
-        generateComponentRoot(name, def.apply, "."),
+        generateComponentRoot(name, def.apply),
         generateComponentParts(name, def.parts, "__"),
         generateComponentParts(name, def.modifiers, "--"),
         generateComponentParts(name, def.variants, "-"),
