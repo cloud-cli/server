@@ -14,7 +14,9 @@ const getPresetPath = (name) => join(CWD, "systems", name + ".yml");
 const each = (v) => (!v ? [] : Object.entries(v));
 
 function expandRules(items) {
-  return items.map(item => item[0] + `{\n  @apply ${item[1]} ;\n}\n`)
+  return items
+    .map((item) => (item ? item[0] + `{\n  @apply ${item[1]} ;\n}\n` : ""))
+    .filter(Boolean);
 }
 
 function generateComponentParts(name, def, separator) {
@@ -56,10 +58,7 @@ function defineComponent(name, def, useShadowDom) {
         generateComponentParts(name, def.states, ":"),
       ];
 
-  return all
-    .map(expandRules)
-    .flat(2)
-    .join("");
+  return all.map(expandRules).flat(2).join("");
 }
 
 function generateCssSafelist(presets) {
