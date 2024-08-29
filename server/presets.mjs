@@ -16,7 +16,25 @@ function generateComponentParts(name, def, separator) {
   return !def ? [] : Object.entries(def).map(([part, classes]) => `.${name}${separator}${part} {\n  @apply ${classes} ;\n}\n`);
 }
 
-function defineComponent(name, def) {
+function generateShadowComponentParts(name, def) {
+  return !def ? [] : Object.entries(def).map(([part, classes]) => `${name}::part(${part}) {\n  @apply ${classes} ;\n}\n`);
+}
+
+function generateShadowComponentStates(name, def) {
+  return !def ? [] : Object.entries(def).map(([part, classes]) => `${name}::part(component):${part} {\n  @apply ${classes} ;\n}\n`);
+}
+
+function defineComponent(name, def, useShadowDom) {
+  if (useShadowDom) {
+    return [
+      `${name}::part(component) {\n${(def.apply && '  @apply ' + def.apply + ';\n') || ''}}\n`,
+      generateShadowComponentParts(name, def.parts),
+      generateShadowComponentStates(name, def.states),
+    ]
+      .flat()
+      .join('');
+  }
+
   return [
     `.${name} {\n${(def.apply && '  @apply ' + def.apply + ';\n') || ''}}\n`,
     generateComponentParts(name, def.parts, '__'),
@@ -54,7 +72,7 @@ function generateCssSafelist(presets) {
   return classes;
 }
 
-function generateCssTemplate(presets) {
+function generateCssTemplate(presets, useShadowDom) {
   const styles = [];
   const variables = {};
   const chain = presets.reduce((chain, next) => {
@@ -81,7 +99,7 @@ function generateCssTemplate(presets) {
     return chain;
   }, {});
 
-  const components = Object.entries(chain).map(([name, def]) => defineComponent(name, def)).join('');
+  const components = Object.entries(chain).map(([name, def]) => defineComponent(name, def, useShadowDom)).join('');
   const allVariables = Object.entries(variables).map(([key, value]) => `--${key}: ${value};`).join('\n');
   const css = `:root{
   ${allVariables}
@@ -130,7 +148,7 @@ export async function generatePreset(input) {
   }
 
   const json = JSON.stringify(tailwindConfig, null, 2);
-  const cssTemplate = generateCssTemplate(allPresets);
+  const cssTemplate = generateCssTemplate(allPresets, (input.shadowDom || input['shadow-dom']));
   const plugins = [tailwind(tailwindConfig), autoprefixer(), input.minify && cssnano()].filter(Boolean);
   const processor = postcss(...plugins);
 
