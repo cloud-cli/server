@@ -13,6 +13,10 @@ const CWD = process.cwd();
 const getPresetPath = (name) => join(CWD, "systems", name + ".yml");
 const each = (v) => (!v ? [] : Object.entries(v));
 
+function expandRules(items) {
+  return items.map(item => item[0] + `{\n  @apply ${item[1]} ;\n}\n`)
+}
+
 function generateComponentParts(name, def, separator) {
   return each(def).map(([part, c]) => [`.${name}${separator}${part}`, c]);
 }
@@ -27,7 +31,7 @@ function generateShadowComponentStates(name, def) {
 
 function generateShadowComponentVariants(name, variants) {
   return each(variants).map(([variant, c]) => [
-    `.${name}.${name}-${variant}::part(component)`,
+    `${name}.${name}-${variant}::part(component)`,
     c,
   ]);
 }
@@ -53,7 +57,8 @@ function defineComponent(name, def, useShadowDom) {
       ];
 
   return all
-    .flatMap((item) => item[0] + `{\n  @apply ${item[1]} ;\n}\n`)
+    .map(expandRules)
+    .flat(2)
     .join("");
 }
 
